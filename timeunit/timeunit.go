@@ -1,13 +1,20 @@
 package timeunit
 
+import "time"
+
 type TimeUnit int
 
 const (
-	DAYS TimeUnit = iota
-	HOURS
+	NANOSECONDS TimeUnit = iota
 	MICROSECONDS
 	MILLISECONDS
-	MINUTES
-	NANOSECONDS
 	SECONDS
+	MINUTES
+	HOURS
+	DAYS
 )
+
+func ZeroTime() time.Time {
+	zTime := time.Time{}
+	return zTime
+}

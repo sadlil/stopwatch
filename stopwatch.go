@@ -8,12 +8,12 @@ import (
 
 type stopWatch struct {
 	isRunning   bool
-	startTime   *time.Time
+	startTime   time.Time
 	elapsedTime time.Duration
-	laps        map[string]time.Time
+	laps        *map[string]time.Time
 }
 
-func newStopWatch(t *time.Time, running bool) *stopWatch {
+func newStopWatch(t time.Time, running bool) *stopWatch {
 	return &stopWatch{
 		isRunning:   running,
 		startTime:   t,
@@ -23,19 +23,19 @@ func newStopWatch(t *time.Time, running bool) *stopWatch {
 }
 
 func New() *stopWatch {
-	return newStopWatch(nil, false)
+	return newStopWatch(timeunit.ZeroTime(), false)
 }
 
 func NewFrom(t time.Time) *stopWatch {
-	return newStopWatch(&t, false)
+	return newStopWatch(t, false)
 }
 
 func NewStarted() *stopWatch {
-	return newStopWatch(&time.Now(), true)
+	return newStopWatch(timeunit.ZeroTime(), true)
 }
 
-func NewStartedFrom(t time.Time) {
-	return newStopWatch(&t, true)
+func NewStartedFrom(t time.Time) *stopWatch {
+	return newStopWatch(t, true)
 }
 
 func (s *stopWatch) IsRunning() bool {
@@ -53,7 +53,7 @@ func (s *stopWatch) Start() (*stopWatch, error) {
 
 func (s *stopWatch) Stop() (*stopWatch, error) {
 	if !s.isRunning {
-		return s, errors.New("stopwatch is already stop")
+		return s, errors.New("stopwatch is already stoped")
 	}
 	s.isRunning = false
 	s.elapsedTime = time.Since(s.startTime)
@@ -62,26 +62,44 @@ func (s *stopWatch) Stop() (*stopWatch, error) {
 
 func (s *stopWatch) Reset() *stopWatch {
 	s.isRunning = false
-	s.startTime = nil
+	s.startTime = timeunit.ZeroTime()
 	s.elapsedTime = time.Duration(0)
 	return s
-}
-
-func (s *stopWatch) ElapsedNanos() int64 {
-	return s.elapsed(timeunit.NANOSECONDS)
 }
 
 func (s *stopWatch) Elapsed(unit timeunit.TimeUnit) int64 {
 	return s.elapsed(unit)
 }
 
+func (s *stopWatch) ElapsedNanos() int64 {
+	return s.elapsed(timeunit.NANOSECONDS)
+}
+
 func (s *stopWatch) ElapsedTime() time.Duration {
 	return s.elapsedTime
 }
 
+func (s *stopWatch) ElapsedString() string {
+	var duration time.Duration
+
+	if s.isRunning {
+		if s.startTime.IsZero() {
+			return "0"
+		}
+		duration = time.Since(s.startTime)
+	} else {
+		duration = s.elapsedTime
+	}
+	return duration.String()
+}
+
 func (s *stopWatch) elapsed(u timeunit.TimeUnit) int64 {
 	var duration time.Duration
-	if !s.isRunning {
+
+	if s.isRunning {
+		if s.startTime.IsZero() {
+			return 0
+		}
 		duration = time.Since(s.startTime)
 	} else {
 		duration = s.elapsedTime
@@ -89,7 +107,18 @@ func (s *stopWatch) elapsed(u timeunit.TimeUnit) int64 {
 	nanos := duration.Nanoseconds()
 	if u == timeunit.NANOSECONDS {
 		return int64(nanos)
+	} else if u == timeunit.MICROSECONDS {
+		return int64(nanos / 1000)
 	} else if u == timeunit.MILLISECONDS {
-
+		return int64(nanos / 1000000)
+	} else if u == timeunit.SECONDS {
+		return int64(duration.Seconds())
+	} else if u == timeunit.MINUTES {
+		return int64(duration.Minutes())
+	} else if u == timeunit.HOURS {
+		return int64(duration.Hours())
+	} else if u == timeunit.DAYS {
+		return int64(duration.Hours() / 24)
 	}
+	return 0
 }
