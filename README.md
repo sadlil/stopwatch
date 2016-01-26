@@ -142,4 +142,4 @@ s.PrintAllLap(timeunit.TimeUnit)
 ```
 
 ## License
-The MIT License (MIT) - see [LICENSE](LICENCE) for more details
+The MIT License (MIT) - see LICENSE for more details
