@@ -1,14 +1,12 @@
 #timeunit
 
-TimeUnit to use the time as desired unit.
-
-### Available TimeUnit
+### Available TimeUnits to used
 ```go
-	NANOSECONDS
-	MICROSECONDS
-	MILLISECONDS
-	SECONDS
-	MINUTES
-	HOURS
-	DAYS
+	timeunit.NANOSECONDS
+	timeunit.MICROSECONDS
+	timeunit.MILLISECONDS
+	timeunit.SECONDS
+	timeunit.MINUTES
+	timeunit.HOURS
+	timeunit.DAYS
 ```

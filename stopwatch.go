@@ -69,6 +69,7 @@ func (s *stopWatch) Reset() *stopWatch {
 	s.isRunning = false
 	s.startTime = timeunit.ZeroTime()
 	s.elapsedTime = time.Duration(0)
+	s.l = make(laps)
 	return s
 }
 

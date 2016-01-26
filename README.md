@@ -22,7 +22,7 @@ In other words, you can start and stop the stopwatch multiple times
 stopwatch is to be used to measure independent events.
 
 
-**Feel free to fork**
+**Feel free to fork.**
 **Any suggestions or pull request will be appreciated**
 
 
@@ -60,7 +60,7 @@ s.Stop() // if the stopwatch is already stopped it will return
          // the stopwatch instance and an error. Will not affect the stopwatch.
          
 
-// reset any running stopwatch
+// reset any stopwatch. this usually clears all the data stored.
 s.Reset()
 ```
 
@@ -141,3 +141,5 @@ s.PrintAllLapString()
 s.PrintAllLap(timeunit.TimeUnit)
 ```
 
+## License
+The MIT License (MIT) - see [LICENSE](LICENCE) for more details
